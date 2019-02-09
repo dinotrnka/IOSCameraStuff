@@ -161,10 +161,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         gpsLabel.text = "GPS Lokacija"
         compassLabel.text = "Kompas"
         yAxisLabel.text = "Nagib"
-        latLabel.text = "Lat:"
-        lngLabel.text = "Lng:"
-        latGoalLabel.text = "43.8787"
-        lngGoalLabel.text = "18.3857"
+        latLabel.text = "Latituda:"
+        lngLabel.text = "Longituda:"
+        latGoalLabel.text = "43.8786 do 43.8787"
+        lngGoalLabel.text = "18.3856 do 18.3857"
         headingLabel.text = "Smjer:"
         headingGoalLabel.text = "245 do 250"
         yLabel.text = "Y osa:"
@@ -209,25 +209,25 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     func layout() {
-        infoView.anchorAndFillEdge(.top, xPad: 0, yPad: 0, otherSize: 115)
+        infoView.anchorAndFillEdge(.top, xPad: 0, yPad: 0, otherSize: 120)
         mainIndicator.anchorAndFillEdge(.bottom, xPad: 0, yPad: 0, otherSize: 50)
         gpsCircle.anchorInCorner(.topLeft, xPad: 10, yPad: 30, width: 16, height: 16)
-        gpsLabel.align(.toTheRightCentered, relativeTo: gpsCircle, padding: 10, width: 100, height: 18)
-        latLabel.align(.underMatchingLeft, relativeTo: gpsCircle, padding: 4, width: 40, height: 15)
-        lngLabel.align(.underMatchingLeft, relativeTo: latLabel, padding: 0, width: 40, height: 15)
+        gpsLabel.align(.toTheRightCentered, relativeTo: gpsCircle, padding: 10, width: 110, height: 18)
+        latLabel.align(.underMatchingLeft, relativeTo: gpsCircle, padding: 6, width: 65, height: 15)
         latValueLabel.align(.toTheRightCentered, relativeTo: latLabel, padding: 4, width: 55, height: 15)
+        latGoalLabel.align(.underMatchingLeft, relativeTo: latLabel, padding: 0, width: 150, height: 15)
+        lngLabel.align(.underMatchingLeft, relativeTo: latGoalLabel, padding: 4, width: 65, height: 15)
         lngValueLabel.align(.toTheRightCentered, relativeTo: lngLabel, padding: 4, width: 55, height: 15)
-        latGoalLabel.align(.toTheRightCentered, relativeTo: latValueLabel, padding: 10, width: 55, height: 15)
-        lngGoalLabel.align(.toTheRightCentered, relativeTo: lngValueLabel, padding: 10, width: 55, height: 15)
-        compassCircle.align(.toTheRightCentered, relativeTo: gpsLabel, padding: 70, width: 15, height: 15)
-        compassLabel.align(.toTheRightCentered, relativeTo: compassCircle, padding: 10, width: 105, height: 18)
-        headingLabel.align(.underMatchingLeft, relativeTo: compassCircle, padding: 4, width: 45, height: 15)
+        lngGoalLabel.align(.underMatchingLeft, relativeTo: lngLabel, padding: 0, width: 150, height: 15)
+        compassCircle.align(.toTheRightCentered, relativeTo: gpsLabel, padding: 20, width: 15, height: 15)
+        compassLabel.align(.toTheRightCentered, relativeTo: compassCircle, padding: 10, width: 80, height: 18)
+        headingLabel.align(.underMatchingLeft, relativeTo: compassCircle, padding: 6, width: 45, height: 15)
         headingValueLabel.align(.toTheRightCentered, relativeTo: headingLabel, padding: 4, width: 35, height: 15)
-        headingGoalLabel.align(.toTheRightCentered, relativeTo: headingValueLabel, padding: 10, width: 100, height: 15)
-        yAxisCircle.align(.underMatchingLeft, relativeTo: headingLabel, padding: 10, width: 16, height: 16)
+        headingGoalLabel.align(.underMatchingLeft, relativeTo: headingLabel, padding: 0, width: 100, height: 15)
+        yAxisCircle.align(.toTheRightCentered, relativeTo: compassLabel, padding: 10, width: 16, height: 16)
         yAxisLabel.align(.toTheRightCentered, relativeTo: yAxisCircle, padding: 10, width: 105, height: 18)
-        yLabel.align(.underMatchingLeft, relativeTo: yAxisCircle, padding: 4, width: 45, height: 16)
+        yLabel.align(.underMatchingLeft, relativeTo: yAxisCircle, padding: 6, width: 45, height: 16)
         yValueLabel.align(.toTheRightCentered, relativeTo: yLabel, padding: 4, width: 35, height: 15)
-        yGoalLabel.align(.toTheRightCentered, relativeTo: yValueLabel, padding: 10, width: 100, height: 15)
+        yGoalLabel.align(.underMatchingLeft, relativeTo: yLabel, padding: 0, width: 100, height: 15)
     }
 }
