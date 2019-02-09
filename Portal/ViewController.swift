@@ -18,10 +18,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     var timer: Timer!
 
     var infoView = UIView()
+    
     var gpsCircle = UIView()
-    var lookCircle = UIView()
     var gpsLabel = UILabel()
-    var lookLabel = UILabel()
     
     var latLabel = UILabel()
     var lngLabel = UILabel()
@@ -30,10 +29,20 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     var latGoalLabel = UILabel()
     var lngGoalLabel = UILabel()
     
+    var compassCircle = UIView()
+    var compassLabel = UILabel()
     var headingLabel = UILabel()
     var headingValueLabel = UILabel()
     var headingGoalLabel = UILabel()
-
+    
+    var yAxisCircle = UIView()
+    var yAxisLabel = UILabel()
+    var yLabel = UILabel()
+    var yValueLabel = UILabel()
+    var yGoalLabel = UILabel()
+    
+    var mainIndicator = UIView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -71,20 +80,32 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         // MOTION
         //
         
-//        motionManager.startAccelerometerUpdates()
-//        motionManager.startGyroUpdates()
+        motionManager.startAccelerometerUpdates()
         
-//        timer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(ViewController.update), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(ViewController.update), userInfo: nil, repeats: true)
     }
     
     @objc func update() {
         if let accelerometerData = motionManager.accelerometerData {
-            print("ACCELO");
-            print(accelerometerData)
+            let roundedYAxisString = String(format: "%.1f", accelerometerData.acceleration.z)
+            let roundedYAxis = Float(roundedYAxisString)!
+            self.yValueLabel.text = roundedYAxisString
+            
+            if (roundedYAxis <= 0.1 && roundedYAxis >= -0.3) {
+                self.yAxisCircle.backgroundColor = UIColor.green
+            } else {
+                self.yAxisCircle.backgroundColor = UIColor.red
+            }
         }
-        if let gyroData = motionManager.gyroData {
-            print("GYRO");
-            print(gyroData)
+    }
+    
+    func updateMainIndicator() {
+        if (self.gpsCircle.backgroundColor === UIColor.green
+            && self.compassCircle.backgroundColor === UIColor.green
+            && self.yAxisCircle.backgroundColor === UIColor.green) {
+            self.mainIndicator.backgroundColor = UIColor.green
+        } else {
+            self.mainIndicator.backgroundColor = UIColor.red
         }
     }
     
@@ -94,31 +115,34 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         let roundedHeading = Int(roundedHeadingString)!
         
         if (roundedHeading > 244 && roundedHeading < 251) {
-            self.lookCircle.backgroundColor = UIColor.green
+            self.compassCircle.backgroundColor = UIColor.green
         } else {
-            self.lookCircle.backgroundColor = UIColor.red
+            self.compassCircle.backgroundColor = UIColor.red
         }
+        
+        self.updateMainIndicator()
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.first {
-//            print(location.coordinate)
-            
             let lat = location.coordinate.latitude
             let lng = location.coordinate.longitude
             
-            let roundedLat = String(format: "%.4f", lat)
-            let roundedLng = String(format: "%.4f", lng)
+            let roundedLatString = String(format: "%.4f", lat)
+            let roundedLngString = String(format: "%.4f", lng)
+            let roundedLat = Float(roundedLatString)
+            let roundedLng = Float(roundedLngString)
             
-            self.latValueLabel.text = roundedLat
-            self.lngValueLabel.text = roundedLng
+            self.latValueLabel.text = roundedLatString
+            self.lngValueLabel.text = roundedLngString
             
-            if (roundedLat == "43.8787" && roundedLng == "18.3857") {
+            if (roundedLat == 43.8787 && roundedLng == 18.3857) {
                 self.gpsCircle.backgroundColor = UIColor.green
             } else {
                 self.gpsCircle.backgroundColor = UIColor.red
             }
             
+            self.updateMainIndicator()
         }
     }
     
@@ -129,68 +153,81 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     
     func setup() {
         infoView.backgroundColor = UIColor.white
-        infoView.layer.zPosition = 1
         
-        gpsLabel.text = "Lokacija"
-        lookLabel.text = "Orijentacija"
+        mainIndicator.backgroundColor = UIColor.red
+        mainIndicator.layer.borderWidth = 2
+        mainIndicator.layer.borderColor = UIColor.black.cgColor
+        
+        gpsLabel.text = "GPS Lokacija"
+        compassLabel.text = "Kompas"
+        yAxisLabel.text = "Nagib"
         latLabel.text = "Lat:"
         lngLabel.text = "Lng:"
         latGoalLabel.text = "43.8787"
         lngGoalLabel.text = "18.3857"
         headingLabel.text = "Smjer:"
-        headingGoalLabel.text = "245-250"
+        headingGoalLabel.text = "245 do 250"
+        yLabel.text = "Y osa:"
+        yGoalLabel.text = "0.1 do -0.3"
         
-        [gpsCircle, lookCircle].forEach({ view in
+        [infoView, mainIndicator].forEach({ view in
+            view.layer.zPosition = 1
+        })
+        
+        [gpsCircle, compassCircle,
+         yAxisCircle].forEach({ view in
             view.backgroundColor = UIColor.red
             view.layer.cornerRadius = 8
             view.layer.borderWidth = 2
             view.layer.borderColor = UIColor.black.cgColor
         })
         
-        [gpsLabel, lookLabel].forEach({ view in
+        [gpsLabel, compassLabel, yAxisLabel].forEach({ view in
             view.font = UIFont.boldSystemFont(ofSize: 16)
         })
         
-        [latGoalLabel, lngGoalLabel, headingGoalLabel].forEach({ view in
+        [latGoalLabel, lngGoalLabel,
+         headingGoalLabel, yGoalLabel].forEach({ view in
             view.textColor = UIColor.green
         })
         
         [latLabel, lngLabel, latValueLabel,
          lngValueLabel, latGoalLabel, lngGoalLabel,
-         headingLabel, headingValueLabel, headingGoalLabel].forEach({ view in
+         headingLabel, headingValueLabel, headingGoalLabel,
+         yLabel, yValueLabel, yGoalLabel].forEach({ view in
             view.font = UIFont.boldSystemFont(ofSize: 12)
          })
         
-        [gpsCircle, gpsLabel, lookCircle, lookLabel, latLabel, lngLabel,
+        [gpsCircle, gpsLabel, compassCircle, compassLabel, latLabel, lngLabel,
          latValueLabel, lngValueLabel, latGoalLabel, lngGoalLabel, headingLabel,
-         headingValueLabel, headingGoalLabel].forEach({ view in
+         headingValueLabel, headingGoalLabel, yAxisCircle, yAxisLabel,
+         yLabel, yValueLabel, yGoalLabel].forEach({ view in
             infoView.addSubview(view)
         })
         
-        [infoView].forEach(view.addSubview)
+        [infoView, mainIndicator].forEach(view.addSubview)
     }
     
     func layout() {
-        infoView.anchorAndFillEdge(.top, xPad: 0, yPad: 0, otherSize: 105)
-        
+        infoView.anchorAndFillEdge(.top, xPad: 0, yPad: 0, otherSize: 115)
+        mainIndicator.anchorAndFillEdge(.bottom, xPad: 0, yPad: 0, otherSize: 50)
         gpsCircle.anchorInCorner(.topLeft, xPad: 10, yPad: 30, width: 16, height: 16)
-        gpsLabel.align(.toTheRightCentered, relativeTo: gpsCircle, padding: 10, width: 100, height: 16)
-        
+        gpsLabel.align(.toTheRightCentered, relativeTo: gpsCircle, padding: 10, width: 100, height: 18)
         latLabel.align(.underMatchingLeft, relativeTo: gpsCircle, padding: 4, width: 40, height: 15)
         lngLabel.align(.underMatchingLeft, relativeTo: latLabel, padding: 0, width: 40, height: 15)
-        
         latValueLabel.align(.toTheRightCentered, relativeTo: latLabel, padding: 4, width: 55, height: 15)
         lngValueLabel.align(.toTheRightCentered, relativeTo: lngLabel, padding: 4, width: 55, height: 15)
-        
         latGoalLabel.align(.toTheRightCentered, relativeTo: latValueLabel, padding: 10, width: 55, height: 15)
         lngGoalLabel.align(.toTheRightCentered, relativeTo: lngValueLabel, padding: 10, width: 55, height: 15)
-        
-        lookCircle.align(.toTheRightCentered, relativeTo: gpsLabel, padding: 70, width: 15, height: 15)
-        lookLabel.align(.toTheRightCentered, relativeTo: lookCircle, padding: 10, width: 105, height: 16)
-        
-        headingLabel.align(.underMatchingLeft, relativeTo: lookCircle, padding: 4, width: 45, height: 15)
+        compassCircle.align(.toTheRightCentered, relativeTo: gpsLabel, padding: 70, width: 15, height: 15)
+        compassLabel.align(.toTheRightCentered, relativeTo: compassCircle, padding: 10, width: 105, height: 18)
+        headingLabel.align(.underMatchingLeft, relativeTo: compassCircle, padding: 4, width: 45, height: 15)
         headingValueLabel.align(.toTheRightCentered, relativeTo: headingLabel, padding: 4, width: 35, height: 15)
         headingGoalLabel.align(.toTheRightCentered, relativeTo: headingValueLabel, padding: 10, width: 100, height: 15)
-        
+        yAxisCircle.align(.underMatchingLeft, relativeTo: headingLabel, padding: 10, width: 16, height: 16)
+        yAxisLabel.align(.toTheRightCentered, relativeTo: yAxisCircle, padding: 10, width: 105, height: 18)
+        yLabel.align(.underMatchingLeft, relativeTo: yAxisCircle, padding: 4, width: 45, height: 16)
+        yValueLabel.align(.toTheRightCentered, relativeTo: yLabel, padding: 4, width: 35, height: 15)
+        yGoalLabel.align(.toTheRightCentered, relativeTo: yValueLabel, padding: 10, width: 100, height: 15)
     }
 }
