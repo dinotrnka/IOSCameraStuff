@@ -37,14 +37,14 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     var yGoalLabel = UILabel()
     var mainIndicator = UIView()
     
-    let latFrom = 43.8786
-    let latTo = 43.8787
-    let lngFrom = 18.3856
-    let lngTo = 18.3857
-    let headingFrom = 245
-    let headingTo = 250
-    let yFrom = 0.1
-    let yTo = -0.3
+    let latFrom = 43.8588
+    let latTo = 43.8589
+    let lngFrom = 18.4167
+    let lngTo = 18.4168
+    let headingFrom = 150
+    let headingTo = 210
+    let yFrom = 0.2
+    let yTo = 0.3
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,7 +87,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             let roundedYAxis = Double(roundedYAxisString)!
             self.yValueLabel.text = roundedYAxisString
             
-            if (roundedYAxis <= yFrom && roundedYAxis >= yTo) {
+            if (roundedYAxis >= yFrom && roundedYAxis <= yTo) {
                 self.yAxisCircle.backgroundColor = UIColor.green
             } else {
                 self.yAxisCircle.backgroundColor = UIColor.red
