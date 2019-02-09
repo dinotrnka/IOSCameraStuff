@@ -75,60 +75,37 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         infoView.backgroundColor = UIColor.white
         infoView.layer.zPosition = 1
         
-        gpsCircle = UIView()
-        gpsCircle.backgroundColor = UIColor.red
-        gpsCircle.layer.cornerRadius = 15
-        gpsCircle.layer.borderWidth = 2
-        gpsCircle.layer.borderColor = UIColor.black.cgColor
-        gpsCircle.layer.zPosition = 1
-        
         gpsLabel.text = "Lokacija"
-        gpsLabel.textColor = UIColor.black
-        gpsLabel.font = UIFont.boldSystemFont(ofSize: 20.0)
-        gpsLabel.layer.zPosition = 1
-        
-        lookCircle = UIView()
-        lookCircle.backgroundColor = UIColor.red
-        lookCircle.layer.cornerRadius = 15
-        lookCircle.layer.borderWidth = 2
-        lookCircle.layer.borderColor = UIColor.black.cgColor
-        lookCircle.layer.zPosition = 1
-        
         lookLabel.text = "Orijentacija"
-        lookLabel.textColor = UIColor.black
-        lookLabel.font = UIFont.boldSystemFont(ofSize: 20.0)
-        lookLabel.layer.zPosition = 1
-        
-        latLabel.textColor = UIColor.black
-        latLabel.font = UIFont.boldSystemFont(ofSize: 12)
-        latLabel.layer.zPosition = 1
         latLabel.text = "LAT:"
-        
-        lngLabel.textColor = UIColor.black
-        lngLabel.font = UIFont.boldSystemFont(ofSize: 12)
-        lngLabel.layer.zPosition = 1
         lngLabel.text = "LNG:"
-        
-        latValueLabel.textColor = UIColor.black
-        latValueLabel.font = UIFont.boldSystemFont(ofSize: 12)
-        latValueLabel.layer.zPosition = 1
-        
-        lngValueLabel.textColor = UIColor.black
-        lngValueLabel.font = UIFont.boldSystemFont(ofSize: 12)
-        lngValueLabel.layer.zPosition = 1
-        
-        latGoalLabel.textColor = UIColor.green
-        latGoalLabel.font = UIFont.boldSystemFont(ofSize: 12)
-        latGoalLabel.layer.zPosition = 1
         latGoalLabel.text = "43.8787"
-        
-        lngGoalLabel.textColor = UIColor.green
-        lngGoalLabel.font = UIFont.boldSystemFont(ofSize: 12)
-        lngGoalLabel.layer.zPosition = 1
         lngGoalLabel.text = "18.3857"
         
+        [gpsCircle, lookCircle].forEach({ view in
+            view.backgroundColor = UIColor.red
+            view.layer.cornerRadius = 15
+            view.layer.borderWidth = 2
+            view.layer.borderColor = UIColor.black.cgColor
+        })
+        
+        [gpsLabel, lookLabel].forEach({ view in
+            view.font = UIFont.boldSystemFont(ofSize: 20.0)
+        })
+        
+        [latGoalLabel, lngGoalLabel].forEach({ view in
+            view.textColor = UIColor.green
+        })
+        
+        [latLabel, lngLabel, latValueLabel,
+         lngValueLabel, latGoalLabel, lngGoalLabel].forEach({ view in
+            view.font = UIFont.boldSystemFont(ofSize: 12)
+         })
+        
         [gpsCircle, gpsLabel, lookCircle, lookLabel, latLabel, lngLabel,
-         latValueLabel, lngValueLabel, latGoalLabel, lngGoalLabel].forEach(infoView.addSubview)
+         latValueLabel, lngValueLabel, latGoalLabel, lngGoalLabel].forEach({ view in
+            infoView.addSubview(view)
+        })
         
         [infoView].forEach(view.addSubview)
     }
