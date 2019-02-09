@@ -16,46 +16,40 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     let cameraManager = CameraManager()
     var motionManager = CMMotionManager()
     var timer: Timer!
-
     var infoView = UIView()
-    
     var gpsCircle = UIView()
     var gpsLabel = UILabel()
-    
     var latLabel = UILabel()
     var lngLabel = UILabel()
     var latValueLabel = UILabel()
     var lngValueLabel = UILabel()
     var latGoalLabel = UILabel()
     var lngGoalLabel = UILabel()
-    
     var compassCircle = UIView()
     var compassLabel = UILabel()
     var headingLabel = UILabel()
     var headingValueLabel = UILabel()
     var headingGoalLabel = UILabel()
-    
     var yAxisCircle = UIView()
     var yAxisLabel = UILabel()
     var yLabel = UILabel()
     var yValueLabel = UILabel()
     var yGoalLabel = UILabel()
-    
     var mainIndicator = UIView()
+    
+    let latFrom = 43.8786
+    let latTo = 43.8787
+    let lngFrom = 18.3856
+    let lngTo = 18.3857
+    let headingFrom = 245
+    let headingTo = 250
+    let yFrom = 0.1
+    let yTo = -0.3
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        //
-        // SETUP
-        //
-        
         cameraManager.addPreviewLayerToView(view)
         setup()
-        
-        //
-        // LOCATION
-        //
         
         self.locationManager.requestAlwaysAuthorization()
         self.locationManager.requestWhenInUseAuthorization()
@@ -66,37 +60,15 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             self.locationManager.startUpdatingLocation()
         }
         
-        //
-        // HEADING
-        //
-        
         if (CLLocationManager.headingAvailable()) {
             locationManager.headingFilter = 1
             locationManager.startUpdatingHeading()
             locationManager.delegate = self
         }
         
-        //
-        // MOTION
-        //
-        
         motionManager.startAccelerometerUpdates()
-        
-        timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(ViewController.update), userInfo: nil, repeats: true)
-    }
-    
-    @objc func update() {
-        if let accelerometerData = motionManager.accelerometerData {
-            let roundedYAxisString = String(format: "%.1f", accelerometerData.acceleration.z)
-            let roundedYAxis = Float(roundedYAxisString)!
-            self.yValueLabel.text = roundedYAxisString
-            
-            if (roundedYAxis <= 0.1 && roundedYAxis >= -0.3) {
-                self.yAxisCircle.backgroundColor = UIColor.green
-            } else {
-                self.yAxisCircle.backgroundColor = UIColor.red
-            }
-        }
+        timer = Timer.scheduledTimer(timeInterval: 0.1, target: self,
+                selector: #selector(ViewController.update), userInfo: nil, repeats: true)
     }
     
     func updateMainIndicator() {
@@ -109,12 +81,28 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         }
     }
     
+    @objc func update() {
+        if let accelerometerData = motionManager.accelerometerData {
+            let roundedYAxisString = String(format: "%.1f", accelerometerData.acceleration.z)
+            let roundedYAxis = Double(roundedYAxisString)!
+            self.yValueLabel.text = roundedYAxisString
+            
+            if (roundedYAxis <= yFrom && roundedYAxis >= yTo) {
+                self.yAxisCircle.backgroundColor = UIColor.green
+            } else {
+                self.yAxisCircle.backgroundColor = UIColor.red
+            }
+            
+            self.updateMainIndicator()
+        }
+    }
+    
     func locationManager(_ manager: CLLocationManager, didUpdateHeading heading: CLHeading) {
         let roundedHeadingString = String(format: "%.0f", heading.magneticHeading)
         headingValueLabel.text = roundedHeadingString
         let roundedHeading = Int(roundedHeadingString)!
         
-        if (roundedHeading > 244 && roundedHeading < 251) {
+        if (roundedHeading >= headingFrom && roundedHeading <= headingTo) {
             self.compassCircle.backgroundColor = UIColor.green
         } else {
             self.compassCircle.backgroundColor = UIColor.red
@@ -130,13 +118,14 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             
             let roundedLatString = String(format: "%.4f", lat)
             let roundedLngString = String(format: "%.4f", lng)
-            let roundedLat = Float(roundedLatString)
-            let roundedLng = Float(roundedLngString)
+            let roundedLat = Double(roundedLatString)!
+            let roundedLng = Double(roundedLngString)!
             
             self.latValueLabel.text = roundedLatString
             self.lngValueLabel.text = roundedLngString
             
-            if (roundedLat == 43.8787 && roundedLng == 18.3857) {
+            if (roundedLat >= latFrom && roundedLat <= latTo
+                && roundedLng >= lngFrom && roundedLng <= lngTo) {
                 self.gpsCircle.backgroundColor = UIColor.green
             } else {
                 self.gpsCircle.backgroundColor = UIColor.red
@@ -163,12 +152,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         yAxisLabel.text = "Nagib"
         latLabel.text = "Latituda:"
         lngLabel.text = "Longituda:"
-        latGoalLabel.text = "43.8786 do 43.8787"
-        lngGoalLabel.text = "18.3856 do 18.3857"
+        latGoalLabel.text = "\(latFrom) do \(latTo)"
+        lngGoalLabel.text = "\(lngFrom) do \(lngTo)"
         headingLabel.text = "Smjer:"
-        headingGoalLabel.text = "245 do 250"
+        headingGoalLabel.text = "\(headingFrom) do \(headingTo)"
         yLabel.text = "Y osa:"
-        yGoalLabel.text = "0.1 do -0.3"
+        yGoalLabel.text = "\(yFrom) do \(yTo)"
         
         [infoView, mainIndicator].forEach({ view in
             view.layer.zPosition = 1
