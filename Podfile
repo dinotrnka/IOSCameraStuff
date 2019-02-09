@@ -6,5 +6,6 @@ target 'Portal' do
   use_frameworks!
 
   # Pods for Portal
+  pod 'Neon'
 
 end

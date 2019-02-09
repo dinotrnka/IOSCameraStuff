@@ -120,6 +120,7 @@
 				31F6527E220EECAB004E65E8 /* Frameworks */,
 				31F6527F220EECAB004E65E8 /* Resources */,
 				317F17B2220EF41000FDB1BC /* Embed Frameworks */,
+				9B867EA9241807ABF1663F44 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -177,6 +178,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		9B867EA9241807ABF1663F44 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Portal/Pods-Portal-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Neon/Neon.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Neon.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Portal/Pods-Portal-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		CD0D945FCDE5415AFAFE22CA /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
